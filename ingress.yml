@@ -8,10 +8,10 @@ spec:
   rules:
     - http:
         paths:
-          path: /
-          pathType: prefix
-          backend:
-            service:
-              name: mysvc
-              port:
-                number: 80
+          - path: /
+            pathType: prefix
+            backend:
+              service:
+                name: mysvc
+                port:
+                  number: 80
