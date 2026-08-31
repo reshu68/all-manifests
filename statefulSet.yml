@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: myss
+spec:
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+        - name: db-cont
+          image: reshu68/k8s2pro:dbimage
+          ports:
+            - containerPort: 3306
+              
+          #secret
+          envFrom:
+            - secretRef:
+                name: mysecret
+          #resoirceQuota
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "127Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+          #pvc
+          volumeMounts:
+            - name: mypvc
+              mountPath: /var/lib/mysql
