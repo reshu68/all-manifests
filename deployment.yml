@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mydeploy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: phpapp
+  template:
+    metadata:
+      labels: 
+        app: phpapp
+    spec:
+      containers:
+        - name: cont1
+          image: reshu68/k8s2pro:appimage
+          ports:
+            - containerPort: 80
+          #configmap
+          envFrom:
+            - configMapRef:
+                name: bankapp-config
+          
+          #resourceQuota
+          resources:
+            requests: 
+              cpu: '100m'
+              memory: '128Mi'
+            limits: 
+              cpu: '200m'
+              memory: '256Mi'
+          #livenessProbe
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+              initialDelaySeconds: 30
+              periodSeconds: 5
+          
+          #readinessProbe
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+              initialDelaySeconds: 30
+              periodSeconds: 5
+            
