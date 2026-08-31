@@ -1,28 +1,36 @@
+
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: myss
+
 spec:
+  serviceName: db-svc
+
   selector:
     matchLabels:
       app: db
+
   template:
     metadata:
       labels:
         app: db
+
     spec:
       containers:
         - name: db-cont
           image: reshu68/k8s2pro:dbimage
+
           ports:
             - containerPort: 3306
-              
-          #secret
+
+          # Secret
           envFrom:
             - secretRef:
                 name: mysecret
-          #resoirceQuota
+
+          # Resources
           resources:
             requests:
               cpu: "100m"
@@ -30,11 +38,14 @@ spec:
             limits:
               cpu: "200m"
               memory: "256Mi"
-          #pvc
+
+          # PVC mount
           volumeMounts:
             - name: mypvc
               mountPath: /var/lib/mysql
-    volumes:
-      - name: mypvc
-        persistentVolumeClaim: 
+
+      # PVC volume
+      volumes:
+        - name: mypvc
+          persistentVolumeClaim:
             claimName: mypvc
